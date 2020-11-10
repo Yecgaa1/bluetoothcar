@@ -47,7 +47,7 @@ void dealfirst(char *a) {
     {
         char i[80];
         strcat(a,"Out of image!");
-        HAL_UART_Transmit(&huart1, i, sizeof(i), 0xFFFF);
+        HAL_UART_Transmit(&huart2, i, sizeof(i), 0xFFFF);
 
     }
     //HAL_Delay(10);
@@ -57,6 +57,7 @@ void work()
 {
     if(Fspeed>0)
     {
+
         HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
         HAL_GPIO_WritePin(GPIOD,GPIO_PIN_1,GPIO_PIN_RESET);
         HAL_GPIO_WritePin(GPIOD,GPIO_PIN_3,GPIO_PIN_SET);

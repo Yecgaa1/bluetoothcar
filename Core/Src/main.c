@@ -31,8 +31,8 @@
 #define RXBUFFERSIZE  256
 char RxBuffer[RXBUFFERSIZE];
 uint8_t aRxBuffer;
-uint8_t Uart1_Rx_Cnt = 0;
-extern UART_HandleTypeDef huart1;
+uint8_t Uart2_Rx_Cnt = 0;
+extern UART_HandleTypeDef huart2;
 float Fspeed=0;
 float tmultiple=1;
 /* USER CODE END Includes */
@@ -106,12 +106,14 @@ int main(void)
 
     char a[5] = "AF";
     int send = sizeof(a);
-
-    //��������ж�
-    HAL_UART_Receive_IT(&huart1, (uint8_t *) &aRxBuffer, 1);
+    HAL_UART_Receive_IT(&huart2, (uint8_t *) &aRxBuffer, 1);
     HAL_TIM_Base_Start_IT(&htim2);
-
-
+    //htim3.Instance->CCR1 =0.5*2799;
+    //htim3.Instance->CCR2 =0.5*2799;
+    //HAL_GPIO_WritePin(GPIOD,GPIO_PIN_0,GPIO_PIN_SET);
+    //HAL_GPIO_WritePin(GPIOD,GPIO_PIN_1,GPIO_PIN_RESET);
+    //HAL_GPIO_WritePin(GPIOD,GPIO_PIN_3,GPIO_PIN_SET);
+    //HAL_GPIO_WritePin(GPIOD,GPIO_PIN_4,GPIO_PIN_RESET);
 
   /* USER CODE END 2 */
 
@@ -121,7 +123,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    //HAL_UART_Transmit(&huart1,"12323\r\n",7,100);
+    //HAL_UART_Transmit(&huart2,"12323\r\n",7,100);
     //HAL_Delay(100);
     }
   /* USER CODE END 3 */
@@ -174,29 +176,30 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
              the HAL_UART_TxCpltCallback could be implemented in the user file
      */
 
-    if (Uart1_Rx_Cnt >= 9)  //婧㈠嚭鍒ゆ柇
+    if (Uart2_Rx_Cnt >= 9)  //婧㈠嚭鍒ゆ柇
     {
-        Uart1_Rx_Cnt = 0;
+        Uart2_Rx_Cnt = 0;
         memset(RxBuffer, 0x00, sizeof(RxBuffer));
-        HAL_UART_Transmit(&huart1, (uint8_t *) "Out!", 10, 0xFFFF);
+        HAL_UART_Transmit(&huart2, (uint8_t *) "Out!", 10, 0xFFFF);
 
     }
     else
     {
-        RxBuffer[Uart1_Rx_Cnt++] = aRxBuffer;   //鎺ユ敹鏁版嵁杞�?
-
-        if ((RxBuffer[Uart1_Rx_Cnt - 1] == 0x0A) && (RxBuffer[Uart1_Rx_Cnt - 2] == 0x0D)) //鍒ゆ柇缁撴潫�??
+        RxBuffer[Uart2_Rx_Cnt++] = aRxBuffer;   //鎺ユ敹鏁版嵁杞�?
+        //char a[]="Hello World";
+        //HAL_UART_Transmit(&huart1, a, sizeof(a), 0xFFFF);
+        if (1) //鍒ゆ柇缁撴潫�??
         {
-            //HAL_UART_Transmit(&huart1, (uint8_t *) RxBuffer, Uart1_Rx_Cnt, 0xFFFF); //灏嗘敹鍒扮殑淇℃伅鍙�??佸嚭�??
-            //while (HAL_UART_GetState(&huart1) == HAL_UART_STATE_BUSY_TX);//�??娴婾ART鍙戦?佺粨�??
+            //HAL_UART_Transmit(&huart1, (uint8_t *) RxBuffer, Uart2_Rx_Cnt, 0xFFFF); //灏嗘敹鍒扮殑淇℃伅鍙�??佸嚭�??
+            //while (HAL_UART_GetState(&huart2) == HAL_UART_STATE_BUSY_TX);//�??娴婾ART鍙戦?佺粨�??
             //HAL_Delay(10);
-            //dealfirst(RxBuffer);
-            Uart1_Rx_Cnt = 0;
-            memset(RxBuffer, 0x00, sizeof(RxBuffer)); //娓呯┖鏁扮粍
+            dealfirst(RxBuffer);
+            Uart2_Rx_Cnt = 0;
+            memset(RxBuffer, 0x00, sizeof(RxBuffer));
         }
     }
 
-    HAL_UART_Receive_IT(&huart1, (uint8_t *) &aRxBuffer, 1);   //鍐嶅紑鍚帴�?朵腑�??
+    HAL_UART_Receive_IT(&huart2, (uint8_t *) &aRxBuffer, 1);
 }
 
 
